@@ -276,15 +276,17 @@ body {
 .unit-num {
   font-family: 'Unbounded', sans-serif;
   font-weight: 700;
-  font-size: clamp(0.9rem, 3.5vw, 2.4rem);
+  font-size: clamp(0.7rem, 4vw, 2.4rem);
   line-height: 1.1;
   color: var(--text);
   letter-spacing: -0.02em;
   display: block;
-  min-height: 2.4rem;
-  word-break: break-all;
-  overflow-wrap: break-word;
-  white-space: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  text-align: center;
+  /* Автоматически сжимает текст если не влезает */
+  transform-origin: center;
 }
 
 .unit-label {
@@ -691,8 +693,26 @@ function update() {
   document.head.appendChild(style);
 })();
 
+// Автомасштаб чисел под ширину карточки
+function fitText() {
+  document.querySelectorAll('.unit-num').forEach(el => {
+    el.style.fontSize = '';
+    const parent = el.parentElement;
+    const maxWidth = parent.clientWidth - 20;
+    let size = 38;
+    el.style.fontSize = size + 'px';
+    while (el.scrollWidth > maxWidth && size > 10) {
+      size--;
+      el.style.fontSize = size + 'px';
+    }
+  });
+}
+
+window.addEventListener('resize', fitText);
+
 update();
-setInterval(update, 100);
+fitText();
+setInterval(() => { update(); fitText(); }, 100);
 </script>
 </body>
 </html>
