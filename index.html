@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ждём лето</title>
+<meta charset="UTF-8">
+<style>
+body{
+font-family:Arial;
+text-align:center;
+background:#f2f2f2;
+}
+
+h1{
+color:red;
+}
+
+.bar{
+width:80%;
+height:20px;
+background:#ddd;
+margin:20px auto;
+}
+
+.progress{
+height:20px;
+background:gray;
+width:0%;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Ждём лето!</h1>
+
+<p id="days"></p>
+
+<div class="bar">
+<div id="bar" class="progress"></div>
+</div>
+
+<script>
+
+const summer = new Date("June 1, 2026 00:00:00").getTime();
+
+function update(){
+
+const now = new Date().getTime();
+const diff = summer - now;
+
+const days = diff / (1000*60*60*24);
+
+document.getElementById("days").innerText =
+"До лета дней: " + days.toFixed(2);
+
+}
+
+setInterval(update,1000);
+
+</script>
+
+</body>
+</html>
