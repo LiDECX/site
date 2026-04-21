@@ -1,705 +1,281 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ждём лето</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;700;900&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Summer Countdown — LiDECX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1e1e1e;
+      --accent: #e8e8e8;
+      --muted: #555;
+      --text: #999;
+      --bright: #fff;
+      --green: #4ade80;
+      --sun: #FFD166;
+    }
 
-<style>
-:root {
-  --bg: #0a0a0f;
-  --surface: rgba(255,255,255,0.04);
-  --border: rgba(255,255,255,0.08);
-  --sun: #FFD166;
-  --sky: #06D6A0;
-  --wave: #118AB2;
-  --heat: #FF6B35;
-  --text: #f0ede8;
-  --muted: rgba(240,237,232,0.4);
-}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
 
-body {
-  font-family: 'JetBrains Mono', monospace;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-  position: relative;
-}
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-/* === Animated background === */
-.bg-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
+    #hero { padding: 100px 0 60px; }
 
-.bg-gradient {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255,209,102,0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(6,214,160,0.07) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 40% at 20% 70%, rgba(17,138,178,0.07) 0%, transparent 50%);
-}
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 6px;
+      margin-bottom: 32px;
+    }
 
-.stars {
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 25% 45%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 40% 20%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 55% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
-    radial-gradient(1px 1px at 70% 10%, rgba(255,255,255,0.6) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 80% 35%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 90% 75%, rgba(255,255,255,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
-    radial-gradient(1px 1px at 60% 90%, rgba(255,209,102,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 35% 70%, rgba(255,255,255,0.4) 0%, transparent 100%);
-}
+    .hero-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(2rem, 6vw, 2.5rem);
+      font-weight: 600;
+      color: var(--bright);
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
 
-/* === Sun === */
-.sun-container {
-  position: fixed;
-  top: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 0;
-  pointer-events: none;
-  animation: sunRise 2.5s cubic-bezier(.16,1,.3,1) forwards;
-}
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
 
-@keyframes sunRise {
-  from { top: -120px; opacity: 0; }
-  to { top: -60px; opacity: 1; }
-}
+    .progress-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 12px;
+    }
 
-.sun {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #ffe566, #FFD166 40%, #FF9F1C 100%);
-  box-shadow:
-    0 0 60px 20px rgba(255,209,102,0.25),
-    0 0 120px 40px rgba(255,159,28,0.15),
-    0 0 200px 80px rgba(255,107,53,0.08);
-  position: relative;
-  animation: sunPulse 4s ease-in-out infinite;
-}
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-@keyframes sunPulse {
-  0%, 100% { box-shadow: 0 0 60px 20px rgba(255,209,102,0.25), 0 0 120px 40px rgba(255,159,28,0.15); }
-  50% { box-shadow: 0 0 80px 30px rgba(255,209,102,0.35), 0 0 160px 60px rgba(255,159,28,0.2); }
-}
+    .pct-value { color: var(--sun); font-weight: 600; }
 
-.sun-ray {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 2px;
-  background: linear-gradient(to right, rgba(255,209,102,0.6), transparent);
-  transform-origin: left center;
-  border-radius: 2px;
-}
+    .track {
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
 
-/* === Layout === */
-.page {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 180px 20px 60px;
-}
+    .fill {
+      height: 100%;
+      background: var(--sun);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
 
-/* === Header badge === */
-.badge {
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
-  border: 1px solid var(--border);
-  padding: 6px 16px;
-  border-radius: 100px;
-  margin-bottom: 24px;
-  background: var(--surface);
-  animation: fadeUp 1s ease both;
-  animation-delay: 0.2s;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
 
-/* === Title === */
-.title {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 900;
-  font-size: clamp(2.5rem, 10vw, 5.5rem);
-  line-height: 1;
-  text-align: center;
-  letter-spacing: -0.03em;
-  animation: fadeUp 1s ease both;
-  animation-delay: 0.4s;
-}
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
 
-.title span.sun-word {
-  color: var(--sun);
-  display: inline-block;
-  animation: fadeUp 1s ease both, sunWord 3s ease-in-out infinite;
-  animation-delay: 0.4s, 1.4s;
-}
+    .unit-val {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      color: var(--bright);
+      font-weight: 600;
+    }
 
-@keyframes sunWord {
-  0%, 100% { text-shadow: 0 0 20px rgba(255,209,102,0); }
-  50% { text-shadow: 0 0 40px rgba(255,209,102,0.5), 0 0 80px rgba(255,159,28,0.2); }
-}
+    .unit-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 4px;
+    }
 
-.subtitle {
-  color: var(--muted);
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  margin-top: 12px;
-  text-transform: uppercase;
-  animation: fadeUp 1s ease both;
-  animation-delay: 0.6s;
-}
+    .season-box {
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+      padding-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-/* === Progress section === */
-.progress-section {
-  width: 100%;
-  max-width: 720px;
-  margin-top: 56px;
-  animation: fadeUp 1s ease both;
-  animation-delay: 0.8s;
-}
+    .season-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
 
-.progress-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 10px;
-}
+    .season-item.active { color: var(--green); }
+    .season-item.active .season-name { color: var(--green); font-weight: 500; }
+    .season-item.done .season-status { color: var(--muted); }
 
-.progress-label-text {
-  font-size: 10px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
+    .season-name { color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+    .season-status { font-size: 0.75rem; }
 
-.progress-pct {
-  font-size: 12px;
-  color: var(--sun);
-  font-weight: 400;
-}
+    footer {
+      margin-top: 60px;
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-align: center;
+    }
 
-.main-track {
-  width: 100%;
-  height: 6px;
-  background: var(--border);
-  border-radius: 100px;
-  overflow: hidden;
-  position: relative;
-}
-
-.main-fill {
-  height: 100%;
-  border-radius: 100px;
-  background: linear-gradient(90deg, var(--sky) 0%, var(--sun) 60%, var(--heat) 100%);
-  width: 0%;
-  transition: width 0.3s ease;
-  position: relative;
-}
-
-.main-fill::after {
-  content: '';
-  position: absolute;
-  right: 0; top: 50%;
-  transform: translate(50%, -50%);
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  background: var(--sun);
-  box-shadow: 0 0 12px rgba(255,209,102,0.8);
-}
-
-.date-range {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-}
-
-.date-range span {
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 0.05em;
-}
-
-/* === Countdown grid === */
-.countdown-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  width: 100%;
-  max-width: 720px;
-  margin-top: 48px;
-  animation: fadeUp 1s ease both;
-  animation-delay: 1s;
-}
-
-.unit-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 16px 10px 14px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.3s;
-  min-width: 0;
-}
-
-.unit-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,209,102,0.03) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.unit-card:hover {
-  border-color: rgba(255,209,102,0.2);
-}
-
-.unit-num {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: clamp(0.7rem, 4vw, 2.4rem);
-  line-height: 1.1;
-  color: var(--text);
-  letter-spacing: -0.02em;
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  width: 100%;
-  text-align: center;
-  /* Автоматически сжимает текст если не влезает */
-  transform-origin: center;
-}
-
-.unit-label {
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 8px;
-  display: block;
-}
-
-.unit-mini-track {
-  width: 100%;
-  height: 3px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 100px;
-  overflow: hidden;
-  margin-top: 14px;
-}
-
-.unit-mini-fill {
-  height: 100%;
-  border-radius: 100px;
-  transition: width 0.08s linear;
-}
-
-.fill-days  { background: var(--sky); }
-.fill-hours { background: var(--sun); }
-.fill-min   { background: var(--heat); }
-.fill-sec   { background: var(--wave); }
-
-
-.unit-card-wide {
-  width: 100%;
-  max-width: 720px;
-  margin-top: 12px;
-  text-align: center;
-}
-
-.fill-wave { background: var(--wave); }
-
-/* === Season chips === */
-.season-row {
-  display: flex;
-  gap: 10px;
-  margin-top: 40px;
-  width: 100%;
-  max-width: 720px;
-  flex-wrap: wrap;
-  animation: fadeUp 1s ease both;
-  animation-delay: 1.2s;
-}
-
-.chip {
-  flex: 1;
-  min-width: 140px;
-  border-radius: 12px;
-  padding: 14px 16px;
-  font-size: 11px;
-  letter-spacing: 0.05em;
-  border: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-
-.chip.done {
-  background: rgba(6,214,160,0.06);
-  border-color: rgba(6,214,160,0.2);
-}
-
-.chip.active {
-  background: rgba(255,209,102,0.06);
-  border-color: rgba(255,209,102,0.2);
-}
-
-.chip-icon {
-  font-size: 20px;
-  display: block;
-  margin-bottom: 6px;
-}
-
-.chip-title {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.chip-sub {
-  color: var(--muted);
-  font-size: 10px;
-  margin-top: 4px;
-  display: block;
-  letter-spacing: 0.05em;
-}
-
-/* === Now display === */
-.now-display {
-  margin-top: 32px;
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.05em;
-  animation: fadeUp 1s ease both;
-  animation-delay: 1.3s;
-}
-
-.now-display span {
-  color: var(--text);
-}
-
-.tg-icon {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
-
-/* === Buttons row === */
-.btn-row {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 36px;
-  animation: fadeUp 1s ease both;
-  animation-delay: 1.35s;
-}
-
-.tg-btn, .donate-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 24px;
-  border-radius: 14px;
-  text-decoration: none;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  transition: background 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
-}
-
-.tg-btn {
-  background: rgba(41,182,246,0.1);
-  border: 1px solid rgba(41,182,246,0.3);
-  color: #29B6F6;
-}
-
-.tg-btn:hover {
-  background: rgba(41,182,246,0.18);
-  border-color: rgba(41,182,246,0.6);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(41,182,246,0.15);
-}
-
-.donate-btn {
-  background: rgba(255,209,102,0.08);
-  border: 1px solid rgba(255,209,102,0.3);
-  color: var(--sun);
-}
-
-.donate-btn:hover {
-  background: rgba(255,209,102,0.16);
-  border-color: rgba(255,209,102,0.6);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(255,209,102,0.15);
-}
-
-.tg-btn:active, .donate-btn:active {
-  transform: translateY(0);
-}
-
-/* === Footer === */
-.footer {
-  margin-top: 32px;
-  font-size: 10px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.15);
-  animation: fadeUp 1s ease both;
-  animation-delay: 1.4s;
-}
-
-/* === Animations === */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* === Responsive === */
-@media (max-width: 520px) {
-  .countdown-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .page {
-    padding-top: 140px;
-  }
-
-  .sun {
-    width: 120px;
-    height: 120px;
-  }
-
-  .season-row { flex-direction: column; }
-  .chip { min-width: unset; }
-}
-</style>
+    @media (min-width: 480px) {
+      .grid { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
 </head>
 <body>
 
-<div class="bg-layer">
-  <div class="bg-gradient"></div>
-  <div class="stars"></div>
-</div>
+  <section id="hero">
+    <div class="container">
+      <div class="badge">✦ AUTOMATIC SYSTEM</div>
+      <h1 class="hero-name">Summer Countdown</h1>
+      <p class="hero-sub">Автоматический трекер времен года</p>
 
-<!-- Sun -->
-<div class="sun-container">
-  <div class="sun" id="sun"></div>
-</div>
+      <div class="progress-container">
+        <div class="label-row">
+          <span>Прогресс до лета</span>
+          <span class="pct-value" id="pct">0.00%</span>
+        </div>
+        <div class="track">
+          <div class="fill" id="mainFill"></div>
+        </div>
+      </div>
 
-<div class="page">
+      <div class="grid">
+        <div class="card"><span class="unit-val" id="cDays">—</span><span class="unit-label">дней</span></div>
+        <div class="card"><span class="unit-val" id="cHours">—</span><span class="unit-label">часов</span></div>
+        <div class="card"><span class="unit-val" id="cMin">—</span><span class="unit-label">минут</span></div>
+        <div class="card"><span class="unit-val" id="cSec">—</span><span class="unit-label">секунд</span></div>
+      </div>
 
-  <div class="badge">мой первый сайт-проект ✦</div>
-
-  <h1 class="title">Ждём <span class="sun-word">лето</span>!</h1>
-  <p class="subtitle">2025 — 2026 · обратный отсчёт</p>
-
-  <!-- Main progress bar -->
-  <div class="progress-section">
-    <div class="progress-label">
-      <span class="progress-label-text">нелетний период</span>
-      <span class="progress-pct" id="pct">0%</span>
+      <div class="season-box">
+        <div class="season-item" id="s-autumn">
+          <span class="season-name">Осень</span>
+          <span class="season-status" id="st-autumn">ожидание</span>
+        </div>
+        <div class="season-item" id="s-winter">
+          <span class="season-name">Зима</span>
+          <span class="season-status" id="st-winter">ожидание</span>
+        </div>
+        <div class="season-item" id="s-spring">
+          <span class="season-name">Весна</span>
+          <span class="season-status" id="st-spring">ожидание</span>
+        </div>
+        <div class="season-item" id="s-summer">
+          <span class="season-name">Лето</span>
+          <span class="season-status" id="st-summer">скоро</span>
+        </div>
+      </div>
     </div>
-    <div class="main-track">
-      <div class="main-fill" id="mainFill"></div>
-    </div>
-    <div class="date-range">
-      <span>01 сент 2025</span>
-      <span>01 июня 2026</span>
-    </div>
-  </div>
+  </section>
 
-  <!-- Countdown cards -->
-  <div class="countdown-grid">
-    <div class="unit-card">
-      <span class="unit-num" id="cWeeks">—</span>
-      <span class="unit-label">недель</span>
-      <div class="unit-mini-track"><div class="unit-mini-fill fill-sec" id="bWeeks"></div></div>
-    </div>
-    <div class="unit-card">
-      <span class="unit-num" id="cDays">—</span>
-      <span class="unit-label">дней</span>
-      <div class="unit-mini-track"><div class="unit-mini-fill fill-days" id="bDays"></div></div>
-    </div>
-    <div class="unit-card">
-      <span class="unit-num" id="cHours">—</span>
-      <span class="unit-label">часов</span>
-      <div class="unit-mini-track"><div class="unit-mini-fill fill-hours" id="bHours"></div></div>
-    </div>
-    <div class="unit-card">
-      <span class="unit-num" id="cMin">—</span>
-      <span class="unit-label">минут</span>
-      <div class="unit-mini-track"><div class="unit-mini-fill fill-min" id="bMin"></div></div>
-    </div>
-  </div>
+  <footer>
+    <div class="container">© <span id="year"></span> LiDECX · Dynamic Dashboard</div>
+  </footer>
 
-  <!-- Seconds wide card -->
-  <div class="unit-card unit-card-wide">
-    <span class="unit-num" id="cSec">—</span>
-    <span class="unit-label">секунд до лета</span>
-    <div class="unit-mini-track"><div class="unit-mini-fill fill-wave" id="bSec"></div></div>
-  </div>
+  <script>
+    const dates = {
+      autumn: new Date("September 1, 2025 00:00:00").getTime(),
+      winter: new Date("December 1, 2025 00:00:00").getTime(),
+      spring: new Date("March 1, 2026 00:00:00").getTime(),
+      summer: new Date("June 1, 2026 00:00:00").getTime()
+    };
 
-  <!-- Season chips -->
-  <div class="season-row">
-    <div class="chip done">
-      <span class="chip-icon">🍂</span>
-      <span class="chip-title">Осень</span>
-      <span class="chip-sub">уже позади ✓</span>
-    </div>
-    <div class="chip done">
-      <span class="chip-icon">❄️</span>
-      <span class="chip-title">Зима</span>
-      <span class="chip-sub">уже позади ✓</span>
-    </div>
-    <div class="chip active">
-      <span class="chip-icon">🌱</span>
-      <span class="chip-title">Весна</span>
-      <span class="chip-sub" id="springPct">идёт...</span>
-    </div>
-    <div class="chip">
-      <span class="chip-icon">☀️</span>
-      <span class="chip-title">Лето</span>
-      <span class="chip-sub">скоро!</span>
-    </div>
-  </div>
+    function update() {
+      const now = Date.now();
+      document.getElementById('year').textContent = new Date().getFullYear();
 
-  <div class="now-display">сейчас: <span id="nowTime">—</span></div>
+      const diff = Math.max(0, dates.summer - now);
+      document.getElementById('cDays').textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
+      document.getElementById('cHours').textContent = Math.floor(diff / (1000 * 60 * 60)) % 24;
+      document.getElementById('cMin').textContent = Math.floor(diff / (1000 * 60)) % 60;
+      document.getElementById('cSec').textContent = Math.floor(diff / 1000) % 60;
 
+      const totalPeriod = dates.summer - dates.autumn;
+      const currentPassed = now - dates.autumn;
+      const progress = Math.min(100, Math.max(0, (currentPassed / totalPeriod) * 100));
+      document.getElementById('mainFill').style.width = progress + '%';
+      document.getElementById('pct').textContent = progress.toFixed(2) + '%';
 
+      updateSeasonStatus('autumn', dates.autumn, dates.winter);
+      updateSeasonStatus('winter', dates.winter, dates.spring);
+      updateSeasonStatus('spring', dates.spring, dates.summer);
 
-  <div class="footer">summer countdown · made with ☀️</div>
-
-</div>
-
-<script>
-const START = new Date("September 1, 2025 00:00:00").getTime();
-const END   = new Date("June 1, 2026 00:00:00").getTime();
-
-// Spring: March 1 – June 1, 2026
-const SPRING_START = new Date("March 1, 2026 00:00:00").getTime();
-const SPRING_END   = END;
-
-function pad(n) { return String(Math.floor(n)).padStart(2, '0'); }
-
-function update() {
-  const now = Date.now();
-  const diff = Math.max(0, END - now);
-
-  const totalSec   = Math.floor(diff / 1000);
-  const totalMin   = Math.floor(diff / (1000 * 60));
-  const totalHours = Math.floor(diff / (1000 * 60 * 60));
-  const totalDays  = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const totalWeeks = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
-
-  // Числа — целые
-  document.getElementById('cWeeks').textContent = totalWeeks;
-  document.getElementById('cDays').textContent  = totalDays;
-  document.getElementById('cHours').textContent = totalHours;
-  document.getElementById('cMin').textContent   = totalMin;
-  document.getElementById('cSec').textContent   = totalSec;
-
-  // Ползунки: плавное движение на основе миллисекунд внутри каждого цикла
-  const msInSec  = (diff % 1000) / 1000;           // 0.0–1.0 внутри секунды
-  const msInMin  = (diff % (1000 * 60)) / (1000 * 60);         // внутри минуты
-  const msInHour = (diff % (1000 * 60 * 60)) / (1000 * 60 * 60);       // внутри часа
-  const msInDay  = (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60 * 24);     // внутри суток
-  const msInWeek = (diff % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24 * 7); // внутри недели
-
-  document.getElementById('bSec').style.width   = (msInSec   * 100) + '%';
-  document.getElementById('bMin').style.width   = (msInMin   * 100) + '%';
-  document.getElementById('bHours').style.width = (msInHour  * 100) + '%';
-  document.getElementById('bDays').style.width  = (msInDay   * 100) + '%';
-  document.getElementById('bWeeks').style.width = (msInWeek  * 100) + '%';
-
-  // Main progress
-  const progress = ((now - START) / (END - START)) * 100;
-  const clamped = Math.min(100, Math.max(0, progress));
-  document.getElementById('mainFill').style.width = clamped + '%';
-  document.getElementById('pct').textContent = clamped.toFixed(4) + '%';
-
-  // Spring progress
-  const springProg = ((now - SPRING_START) / (SPRING_END - SPRING_START)) * 100;
-  const sp = Math.min(100, Math.max(0, springProg));
-  document.getElementById('springPct').textContent = sp.toFixed(2) + '% весны позади';
-
-  // Clock
-  const d = new Date();
-  document.getElementById('nowTime').textContent = d.toLocaleString('ru-RU');
-}
-
-// Sun rays
-(function buildRays() {
-  const sun = document.getElementById('sun');
-  const count = 12;
-  for (let i = 0; i < count; i++) {
-    const ray = document.createElement('div');
-    ray.className = 'sun-ray';
-    const len = 50 + Math.random() * 40;
-    ray.style.cssText = `
-      width: ${len}px;
-      height: ${1 + Math.random()}px;
-      top: 50%;
-      left: 50%;
-      transform-origin: left center;
-      transform: rotate(${(i / count) * 360}deg);
-      opacity: ${0.3 + Math.random() * 0.3};
-      animation: rayPulse ${2 + Math.random() * 2}s ease-in-out infinite alternate;
-      animation-delay: ${Math.random()}s;
-    `;
-    sun.appendChild(ray);
-  }
-
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes rayPulse {
-      from { opacity: 0.1; }
-      to   { opacity: 0.5; }
+      const sSummer = document.getElementById('s-summer');
+      if (now >= dates.summer) {
+        sSummer.className = 'season-item active';
+        document.getElementById('st-summer').textContent = 'НАСТУПИЛО ☀️';
+      }
     }
-  `;
-  document.head.appendChild(style);
-})();
 
-// Автомасштаб чисел под ширину карточки
-function fitText() {
-  document.querySelectorAll('.unit-num').forEach(el => {
-    el.style.fontSize = '';
-    const parent = el.parentElement;
-    const maxWidth = parent.clientWidth - 20;
-    let size = 38;
-    el.style.fontSize = size + 'px';
-    while (el.scrollWidth > maxWidth && size > 10) {
-      size--;
-      el.style.fontSize = size + 'px';
+    function updateSeasonStatus(id, start, end) {
+      const now = Date.now();
+      const row = document.getElementById('s-' + id);
+      const status = document.getElementById('st-' + id);
+
+      if (now < start) {
+        row.className = 'season-item';
+        status.textContent = 'ожидание';
+      } else if (now >= start && now < end) {
+        row.className = 'season-item active';
+        const prog = ((now - start) / (end - start) * 100).toFixed(0);
+        status.textContent = 'идет (' + prog + '%)';
+      } else {
+        row.className = 'season-item done';
+        status.textContent = 'завершено ✓';
+      }
     }
-  });
-}
 
-window.addEventListener('resize', fitText);
-
-update();
-fitText();
-setInterval(() => { update(); fitText(); }, 100);
-</script>
+    setInterval(update, 1000);
+    update();
+  </script>
 </body>
 </html>
