@@ -240,10 +240,10 @@
       </div>
 
       <div class="grid">
-        <div class="card"><span class="unit-val" id="cDays">—</span><span class="unit-label">дней</span></div>
-        <div class="card"><span class="unit-val" id="cHours">—</span><span class="unit-label">часов</span></div>
-        <div class="card"><span class="unit-val" id="cMin">—</span><span class="unit-label">минут</span></div>
-        <div class="card"><span class="unit-val" id="cSec">—</span><span class="unit-label">секунд</span></div>
+        <div class="card"><span class="unit-val" id="cDays">0</span><span class="unit-label">дней</span></div>
+        <div class="card"><span class="unit-val" id="cHours">0</span><span class="unit-label">часов</span></div>
+        <div class="card"><span class="unit-val" id="cMin">0</span><span class="unit-label">минут</span></div>
+        <div class="card"><span class="unit-val" id="cSec">0</span><span class="unit-label">секунд</span></div>
       </div>
 
       <div class="season-box">
@@ -299,7 +299,7 @@
 
     function update() {
       const now = Date.now();
-      document.getElementById('year').textContent = now.getFullYear();
+      document.getElementById('year').textContent = new Date().getFullYear();
 
       const diff = Math.max(0, dates.summer - now);
       document.getElementById('cDays').textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -310,8 +310,11 @@
       const totalPeriod = dates.summer - dates.autumn;
       const currentPassed = now - dates.autumn;
       const progress = Math.min(100, Math.max(0, (currentPassed / totalPeriod) * 100));
-      document.getElementById('mainFill').style.width = progress + '%';
-      document.getElementById('pct').textContent = progress.toFixed(2) + '%';
+      
+      const fillEl = document.getElementById('mainFill');
+      const pctEl = document.getElementById('pct');
+      if(fillEl) fillEl.style.width = progress + '%';
+      if(pctEl) pctEl.textContent = progress.toFixed(2) + '%';
 
       updateSeasonStatus('autumn', dates.autumn, dates.winter);
       updateSeasonStatus('winter', dates.winter, dates.spring);
@@ -319,8 +322,9 @@
 
       const sSummer = document.getElementById('s-summer');
       if (now >= dates.summer) {
-        sSummer.className = 'season-item active';
-        document.getElementById('st-summer').textContent = 'НАСТУПИЛО ☀️';
+        if(sSummer) sSummer.className = 'season-item active';
+        const stSummer = document.getElementById('st-summer');
+        if(stSummer) stSummer.textContent = 'НАСТУПИЛО ☀️';
       }
     }
 
@@ -328,6 +332,7 @@
       const now = Date.now();
       const row = document.getElementById('s-' + id);
       const status = document.getElementById('st-' + id);
+      if(!row || !status) return;
 
       if (now < start) {
         row.className = 'season-item';
