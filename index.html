@@ -38,7 +38,7 @@
       background: var(--bg);
       color: var(--text);
       font-family: 'Inter', sans-serif;
-      font-weight: 300;
+      font-weight: 400;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       transition: background 0.2s ease, color 0.2s ease;
@@ -194,13 +194,20 @@
     .season-status { font-size: 0.75rem; }
 
     footer {
-      margin-top: 60px;
-      padding: 32px 0;
       border-top: 1px solid var(--border);
+      padding: 28px 0;
+      margin-top: 60px;
+    }
+
+    .footer-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.7rem;
       color: var(--muted);
-      text-align: center;
     }
 
     @media (min-width: 480px) {
@@ -292,7 +299,7 @@
 
     function update() {
       const now = Date.now();
-      document.getElementById('year').textContent = new Date().getFullYear();
+      document.getElementById('year').textContent = now.getFullYear();
 
       const diff = Math.max(0, dates.summer - now);
       document.getElementById('cDays').textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
